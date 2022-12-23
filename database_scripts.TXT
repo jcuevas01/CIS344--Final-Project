@@ -1,0 +1,67 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema teachers_portal
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema teachers_portal
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `teachers_portal` DEFAULT CHARACTER SET utf8 ;
+USE `teachers_portal` ;
+
+-- -----------------------------------------------------
+-- Table `teachers_portal`.`grade`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `teachers_portal`.`grade` (
+  `idgrade` FLOAT NOT NULL)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `teachers_portal`.`courses`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `teachers_portal`.`courses` (
+  `courseId` INT NOT NULL AUTO_INCREMENT,
+  `courseName` VARCHAR(45) NOT NULL,
+  UNIQUE INDEX `courseId_UNIQUE` (`courseId` ASC) VISIBLE,
+  PRIMARY KEY (`courseId`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `teachers_portal`.`students`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `teachers_portal`.`students` (
+  `studentId` INT NOT NULL AUTO_INCREMENT,
+  `studentName` VARCHAR(45) NOT NULL,
+  `enrolledInCourseID` INT NOT NULL DEFAULT 1,
+  `grade` FLOAT NULL,
+  PRIMARY KEY (`studentId`),
+  UNIQUE INDEX `studentId_UNIQUE` (`studentId` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+use teachers_portal;
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `studentsWithGrade`()
+BEGIN
+SELECT *
+FROM students
+LEFT JOIN courses
+ON students.enrolledInCourseID = courses.courseId;
+END
+
+INSERT INTO students (studentName, enrolledInCourseID, grade)
+VALUES ("Maria Jozef", 1,90), ("Linda Jones", 2, 89), ("John
+McGrail", 1, 98), ("Patty Luna", 2, 78);
+INSERT INTO courses (courseName)
+VALUES ("Database Design"), ("Calculus"), ("Physics I");
+
